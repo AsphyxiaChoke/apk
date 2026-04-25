@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -61,11 +59,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DaMaQiScreen() {
     var tabIndex by remember { mutableStateOf(0) }
-    val tabs = listOf("²éÕË´òÂë", "²ÎÊı/»úĞ¾´òÂë", "ºóÌ¨´òÂë")
+    val tabs = listOf("æŸ¥è´¦å‚æ•°", "é…ç½®/å½©ç§å‚æ•°", "åå°å¯†ç ")
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("´òÂëÆ÷ - ³§¼Ò°æ") })
+            TopAppBar(title = { Text("æ‰“ç å™¨ - ä¾¿æºç‰ˆ") })
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
@@ -115,7 +113,7 @@ fun ResultBox(value: String) {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = if (value.isEmpty()) "¡ª" else value,
+            text = if (value.isEmpty()) "--" else value,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             color = if (value.isEmpty()) Color.Gray else Color(0xFFD32F2F),
@@ -149,40 +147,40 @@ fun AuditTab() {
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        LabeledField("ÏßºÅ (Line Num)", line) { line = it }
-        LabeledField("»úºÅ (Machine ID)", machine) { machine = it }
-        LabeledField("ĞòÁĞºÅ (Serial)", serial) { serial = it }
-        LabeledField("Ç°ÆÚÓ¯Àû (Last Money)", last) { last = it }
-        LabeledField("µ±ÆÚÓ¯Àû (Curr Money)", curr) { curr = it }
-        LabeledField("ÔÊĞí´ÎÊı (0-99)", allow) { allow = it }
+        LabeledField(label = "çº¿å· (Line Num)", value = line, onValueChange = { line = it })
+        LabeledField(label = "æœºå° (Machine ID)", value = machine, onValueChange = { machine = it })
+        LabeledField(label = "åºåˆ—å· (Serial)", value = serial, onValueChange = { serial = it })
+        LabeledField(label = "å‰æ¬¡èµ¢åˆ† (Last Money)", value = last, onValueChange = { last = it })
+        LabeledField(label = "æœ¬æ¬¡èµ¢åˆ† (Curr Money)", value = curr, onValueChange = { curr = it })
+        LabeledField(label = "å…è®¸åå·® (0-99)", value = allow, onValueChange = { allow = it })
 
         Spacer(Modifier.height(12.dp))
         Button(
             onClick = {
-                val l = parseLong(line) ?: return@Button toast(ctx, "ÏßºÅÎŞĞ§")
-                val m = parseLong(machine) ?: return@Button toast(ctx, "»úºÅÎŞĞ§")
-                val s = parseLong(serial) ?: return@Button toast(ctx, "ĞòÁĞºÅÎŞĞ§")
-                val lm = parseLong(last, allowNegative = true) ?: return@Button toast(ctx, "Ç°ÆÚÓ¯ÀûÎŞĞ§")
-                val cm = parseLong(curr, allowNegative = true) ?: return@Button toast(ctx, "µ±ÆÚÓ¯ÀûÎŞĞ§")
-                val a = parseLong(allow) ?: return@Button toast(ctx, "ÔÊĞí´ÎÊıÎŞĞ§")
+                val l = parseLong(line) ?: return@Button toast(ctx, "çº¿å·æ— æ•ˆ")
+                val m = parseLong(machine) ?: return@Button toast(ctx, "æœºå°æ— æ•ˆ")
+                val s = parseLong(serial) ?: return@Button toast(ctx, "åºåˆ—å·æ— æ•ˆ")
+                val lm = parseLong(last, allowNegative = true) ?: return@Button toast(ctx, "å‰æ¬¡èµ¢åˆ†æ— æ•ˆ")
+                val cm = parseLong(curr, allowNegative = true) ?: return@Button toast(ctx, "æœ¬æ¬¡èµ¢åˆ†æ— æ•ˆ")
+                val a = parseLong(allow) ?: return@Button toast(ctx, "å…è®¸åå·®æ— æ•ˆ")
                 result = DaMaQi.generateAudit(AuditInput(l, m, s, lm, cm, a))
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Éú³É²éÕËÃÜÂë")
+            Text("ç”ŸæˆæŸ¥è´¦å‚æ•°")
         }
 
         ResultBox(result)
 
         Spacer(Modifier.height(16.dp))
         Text(
-            "½ğ»Ê¹Ú£ºÇåÁã(91)¡¢ÖØÖÃÃÜÂë(92)¡¢½â³ı±¬»ú(93)¡¢ÓÀ¾ÃÊ¹ÓÃ(99)",
+            "æ–°çŸ³å™¨ï¼šé»„é‡‘æ—¶ä»£(91)ã€å®çŸ³åˆ—è½¦(92)ã€é­”æ³•ä¸–ç•Œ(93)ã€é­”é¾™å¸å›½(99)",
             color = Color.Gray,
             fontSize = 12.sp
         )
         Spacer(Modifier.height(6.dp))
         Text(
-            "Î÷ÓÎÏÉÄ§´«£ºÇåÁã(91)¡¢ÖØÖÃÃÜÂë(92)¡¢½â³ı±¬»ú(93)¡¢½âËø¼«ÄÑ(94)¡¢½âËø³¬ÄÑ(95)¡¢ÓÀ¾ÃÊ¹ÓÃ(99)",
+            "å››æµ·é­”é¾™ï¼šé»„é‡‘æ—¶ä»£(91)ã€å®çŸ³åˆ—è½¦(92)ã€é­”æ³•ä¸–ç•Œ(93)ã€æ£®æ—å†’é™©(94)ã€æåœ°é£æš´(95)ã€é­”é¾™å¸å›½(99)",
             color = Color.Gray,
             fontSize = 12.sp
         )
@@ -204,26 +202,26 @@ fun ConfigTab() {
             .padding(16.dp)
     ) {
         Text(
-            "×¢£º²ÎÊıÓë»úĞ¾´òÂëÏàÍ¬",
+            "æ³¨æ„ï¼šé…ç½®å’Œå½©ç¥¨å‚æ•°çš„åºåˆ—å·ç›¸åŒ",
             color = Color.Gray,
             fontSize = 12.sp,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        LabeledField("ÏßºÅ (Line Num)", line) { line = it }
-        LabeledField("»úºÅ (Machine ID)", machine) { machine = it }
-        LabeledField("ĞòÁĞºÅ (Serial)", serial) { serial = it }
+        LabeledField(label = "çº¿å· (Line Num)", value = line, onValueChange = { line = it })
+        LabeledField(label = "æœºå° (Machine ID)", value = machine, onValueChange = { machine = it })
+        LabeledField(label = "åºåˆ—å· (Serial)", value = serial, onValueChange = { serial = it })
 
         Spacer(Modifier.height(12.dp))
         Button(
             onClick = {
-                val l = parseLong(line) ?: return@Button toast(ctx, "ÏßºÅÎŞĞ§")
-                val m = parseLong(machine) ?: return@Button toast(ctx, "»úºÅÎŞĞ§")
-                val s = parseLong(serial) ?: return@Button toast(ctx, "ĞòÁĞºÅÎŞĞ§")
+                val l = parseLong(line) ?: return@Button toast(ctx, "çº¿å·æ— æ•ˆ")
+                val m = parseLong(machine) ?: return@Button toast(ctx, "æœºå°æ— æ•ˆ")
+                val s = parseLong(serial) ?: return@Button toast(ctx, "åºåˆ—å·æ— æ•ˆ")
                 result = DaMaQi.generateConfig(l, m, s)
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Éú³ÉÃÜÂë")
+            Text("ç”Ÿæˆé…ç½®å‚æ•°")
         }
 
         ResultBox(result)
@@ -242,17 +240,17 @@ fun BackgroundTab() {
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        LabeledField("»úºÅ (Machine ID)", machine) { machine = it }
+        LabeledField(label = "æœºå° (Machine ID)", value = machine, onValueChange = { machine = it })
 
         Spacer(Modifier.height(12.dp))
         Button(
             onClick = {
-                val m = parseLong(machine) ?: return@Button toast(ctx, "»úºÅÎŞĞ§")
+                val m = parseLong(machine) ?: return@Button toast(ctx, "æœºå°æ— æ•ˆ")
                 result = DaMaQi.generateBackground(m)
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Éú³ÉºóÌ¨ÃÜÂë")
+            Text("ç”Ÿæˆåå°å¯†ç ")
         }
 
         ResultBox(result)
