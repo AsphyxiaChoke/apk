@@ -149,12 +149,12 @@ fun AuditTab() {
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        LabeledField("线号 (Line Num)", line) { line = it }
-        LabeledField("机号 (Machine ID)", machine) { machine = it }
-        LabeledField("序列号 (Serial)", serial) { serial = it }
-        LabeledField("前期盈利 (Last Money)", last) { last = it }
-        LabeledField("当期盈利 (Curr Money)", curr) { curr = it }
-        LabeledField("允许次数 (0-99)", allow) { allow = it }
+        LabeledField("线号", line) { line = it }
+        LabeledField("机号", machine) { machine = it }
+        LabeledField("序列号", serial) { serial = it }
+        LabeledField("前期盈利", last) { last = it }
+        LabeledField("当期盈利", curr) { curr = it }
+        LabeledField("允许时长 (0-99)", allow) { allow = it }
 
         Spacer(Modifier.height(12.dp))
         Button(
@@ -164,7 +164,7 @@ fun AuditTab() {
                 val s = parseLong(serial) ?: return@Button toast(ctx, "序列号无效")
                 val lm = parseLong(last, allowNegative = true) ?: return@Button toast(ctx, "前期盈利无效")
                 val cm = parseLong(curr, allowNegative = true) ?: return@Button toast(ctx, "当期盈利无效")
-                val a = parseLong(allow) ?: return@Button toast(ctx, "允许次数无效")
+                val a = parseLong(allow) ?: return@Button toast(ctx, "允许时长无效")
                 result = DaMaQi.generateAudit(AuditInput(l, m, s, lm, cm, a))
             },
             modifier = Modifier.fillMaxWidth()
@@ -189,76 +189,3 @@ fun AuditTab() {
     }
 }
 
-@Composable
-fun ConfigTab() {
-    val ctx = LocalContext.current
-    var line by remember { mutableStateOf("100") }
-    var machine by remember { mutableStateOf("20130717") }
-    var serial by remember { mutableStateOf("") }
-    var result by remember { mutableStateOf("") }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp)
-    ) {
-        Text(
-            "注：参数与机芯打码相同",
-            color = Color.Gray,
-            fontSize = 12.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        LabeledField("线号 (Line Num)", line) { line = it }
-        LabeledField("机号 (Machine ID)", machine) { machine = it }
-        LabeledField("序列号 (Serial)", serial) { serial = it }
-
-        Spacer(Modifier.height(12.dp))
-        Button(
-            onClick = {
-                val l = parseLong(line) ?: return@Button toast(ctx, "线号无效")
-                val m = parseLong(machine) ?: return@Button toast(ctx, "机号无效")
-                val s = parseLong(serial) ?: return@Button toast(ctx, "序列号无效")
-                result = DaMaQi.generateConfig(l, m, s)
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("生成密码")
-        }
-
-        ResultBox(result)
-    }
-}
-
-@Composable
-fun BackgroundTab() {
-    val ctx = LocalContext.current
-    var machine by remember { mutableStateOf("") }
-    var result by remember { mutableStateOf("") }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp)
-    ) {
-        LabeledField("机号 (Machine ID)", machine) { machine = it }
-
-        Spacer(Modifier.height(12.dp))
-        Button(
-            onClick = {
-                val m = parseLong(machine) ?: return@Button toast(ctx, "机号无效")
-                result = DaMaQi.generateBackground(m)
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("生成后台密码")
-        }
-
-        ResultBox(result)
-    }
-}
-
-private fun toast(ctx: android.content.Context, msg: String) {
-    Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show()
-}
